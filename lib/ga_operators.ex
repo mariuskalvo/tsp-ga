@@ -38,4 +38,14 @@ defmodule GaOperators do
 
     {offspring1, offspring2}
   end
+
+  @spec assign_fitness([[integer]], [[integer]]) :: [%{fitness: number, individual: [integer]}]
+  def assign_fitness(population, distance_matrix) do
+    for individual <- population do
+      %{
+        fitness: TspUtils.calculate_fitness(individual, distance_matrix),
+        individual: individual
+      }
+    end
+  end
 end

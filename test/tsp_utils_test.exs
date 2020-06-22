@@ -62,5 +62,20 @@ defmodule TspUtilsTest do
     end)
   end
 
+  test "calculate_fitness calculates correct fitness" do
+    # 0 -> 1 = 1
+    # 1 -> 2 = 2
+    # 2 -> 0 = 2
 
+    individual = [0, 1, 2]
+    expected_fitness = 5
+    distance_matrix = [
+      [0, 1, 2],
+      [1, 0, 1],
+      [2, 2, 0],
+    ]
+
+    fitness = TspUtils.calculate_fitness(individual, distance_matrix)
+    assert expected_fitness == fitness
+  end
 end

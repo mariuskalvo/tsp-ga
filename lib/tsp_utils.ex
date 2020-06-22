@@ -27,4 +27,24 @@ defmodule TspUtils do
     end
   end
 
+  defp get_distance(distance_matrix, x, y) do
+    distance_matrix
+    |> Enum.at(y)
+    |> Enum.at(x)
+  end
+
+  @spec calculate_fitness([integer], [[integer]]) :: number
+  def calculate_fitness(individual, distance_matrix) do
+    individual
+    |> Enum.with_index
+    |> Enum.map(fn {_value, index} ->
+      next_index = rem(index + 1, length(individual))
+      x = Enum.at(individual, index)
+      y = Enum.at(individual, next_index)
+      distance = get_distance(distance_matrix, x, y)
+      distance
+    end)
+    |> Enum.sum
+  end
+
 end

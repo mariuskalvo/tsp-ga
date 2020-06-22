@@ -39,4 +39,25 @@ defmodule GaOperatorsTest do
       assert is_number(a)
     end)
   end
+
+  test "assign_fitness assigns fitness to population" do
+    population = [
+      [0, 1, 2, 3],
+      [3, 2, 1, 0],
+    ]
+
+    distance_matrix = [
+      [0, 1, 1, 1],
+      [1, 0, 1, 1],
+      [1, 1, 0, 1],
+      [1, 1, 1, 0],
+    ]
+
+    population_with_fitness = GaOperators.assign_fitness(population, distance_matrix)
+
+    Enum.map(population_with_fitness, fn %{fitness: fitness, individual: individual} ->
+      assert fitness == length(individual)
+      assert individual |> Enum.sort == [0, 1, 2, 3]
+    end)
+  end
 end
