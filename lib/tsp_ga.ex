@@ -1,13 +1,16 @@
 defmodule TspGa do
   alias TspUtils, as: Utils
 
+  def initialize_population([], _pop_size) do
+    raise ArgumentError, message: "Distance matrix is empty. Unable to run."
+  end
+
+  def initialize_population(nil, _pop_size) do
+    raise ArgumentError, message: "Distance matrix is null. Unable to run."
+  end
+
   @spec initialize_population([[integer]], integer) :: [[integer]]
   def initialize_population(distance_matrix, pop_size) do
-
-    if length(distance_matrix) == 0 do
-      raise "Distance matrix is empty. Unable to run."
-    end
-
     ind_length = length(Enum.at(distance_matrix, 0))
     Utils.generate_population(pop_size, ind_length)
   end

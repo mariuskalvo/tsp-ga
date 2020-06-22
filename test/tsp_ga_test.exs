@@ -25,4 +25,16 @@ defmodule TspGaTest do
       assert individual_length == length(ind)
     end)
   end
+
+  test "initialize_population with empty distance_matrix raises error" do
+    assert_raise ArgumentError, fn ->
+      TspGa.initialize_population([], 10)
+    end
+  end
+
+  test "initialize_population with nil distance_matrix raises error" do
+    assert_raise ArgumentError, fn ->
+      TspGa.initialize_population(nil, 10)
+    end
+  end
 end
