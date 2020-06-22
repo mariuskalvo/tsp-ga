@@ -21,4 +21,22 @@ defmodule GaOperatorsTest do
     assert length(Enum.uniq(offspring1)) == length(parent1)
     assert length(Enum.uniq(offspring2)) == length(parent2)
   end
+
+  test "tournament_selection returns a random individual from the population" do
+    tournament_size = 2
+    individual_length = 3
+    population = [
+      [1, 2, 3],
+      [3, 2, 1],
+      [2, 1, 3],
+      [3, 1, 2],
+    ]
+
+    selected_invididual = GaOperators.tournament_selection(population, tournament_size)
+
+    assert length(selected_invididual) == individual_length
+    Enum.each(selected_invididual, fn a ->
+      assert is_number(a)
+    end)
+  end
 end

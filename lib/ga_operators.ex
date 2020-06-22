@@ -21,6 +21,12 @@ defmodule GaOperators do
     offspring
   end
 
+  @spec tournament_selection([[integer]], non_neg_integer) :: [integer]
+  def tournament_selection(population, tournament_size) do
+    Enum.take_random(population, tournament_size)
+    |> Enum.at(0)
+  end
+
   def crossover(parent1, parent2) when length(parent1) != length(parent2) do
     raise ArgumentError, message: "Individuals are not of same length"
   end
