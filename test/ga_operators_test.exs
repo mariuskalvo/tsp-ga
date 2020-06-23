@@ -26,10 +26,11 @@ defmodule GaOperatorsTest do
     tournament_size = 2
     individual_length = 3
     population = [
-      [1, 2, 3],
-      [3, 2, 1],
-      [2, 1, 3],
-      [3, 1, 2],
+      %IndividualWithFitness{fitness: 1, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 2, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 3, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 4, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 5, individual: [1, 2, 3]},
     ]
 
     selected_invididual = GaOperators.tournament_selection(population, tournament_size)
@@ -38,6 +39,21 @@ defmodule GaOperatorsTest do
     Enum.each(selected_invididual, fn a ->
       assert is_number(a)
     end)
+  end
+
+  test "tournament_selection returns highest element in tournament" do
+    tournament_size = 5
+    expected_winner = [9, 9, 9]
+    population = [
+      %IndividualWithFitness{fitness: 1, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 2, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 3, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 4, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 5, individual: expected_winner},
+    ]
+
+    selected_invididual = GaOperators.tournament_selection(population, tournament_size)
+    assert selected_invididual == expected_winner
   end
 
   test "assign_fitness assigns fitness to population" do

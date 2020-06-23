@@ -21,10 +21,11 @@ defmodule GaOperators do
     offspring
   end
 
-  @spec tournament_selection([[integer]], non_neg_integer) :: [integer]
+  @spec tournament_selection([IndividualWithFitness.t], non_neg_integer) :: [integer]
   def tournament_selection(population, tournament_size) do
     Enum.take_random(population, tournament_size)
-    |> Enum.at(0)
+    |> Enum.max_by(fn %{ fitness: fitness } -> fitness end)
+    |> (fn %{ individual: individual } -> individual end).()
   end
 
   def crossover(parent1, parent2) when length(parent1) != length(parent2) do
@@ -39,13 +40,32 @@ defmodule GaOperators do
     {offspring1, offspring2}
   end
 
-  @spec assign_fitness([[integer]], [[integer]]) :: [%{fitness: number, individual: [integer]}]
+  @spec assign_fitness([[integer]], [[integer]]) :: [IndividualWithFitness.t]
   def assign_fitness(population, distance_matrix) do
     for individual <- population do
-      %{
+      %IndividualWithFitness{
         fitness: TspUtils.calculate_fitness(individual, distance_matrix),
         individual: individual
       }
     end
+  end
+
+  @spec select_next_generation([[integer]], [[integer]]) :: [[integer]]
+  def select_next_generation(population, distance_matrix) do
+
+    tournament_size = 10
+    population_with_fitness = assign_fitness(population, distance_matrix)
+    iterations = trunc(length(population) / 2)
+
+    next_generation = 1..iterations
+    |> Enum.reduce([], fn _i, acc ->
+      parent1 = tournament_selection(population_with_fitness, tournament_size)
+      parent2 = tournament_selection(population_with_fitness, tournament_size)
+
+      {offspring1, offspring2} = crossover(parent1, parent2)
+      acc ++ [offspring1, offspring2]
+    end)
+
+    next_generation
   end
 end
