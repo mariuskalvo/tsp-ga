@@ -76,4 +76,39 @@ defmodule GaOperatorsTest do
       assert individual |> Enum.sort == [0, 1, 2, 3]
     end)
   end
+
+  test "select_next_generation returns new population of same size with even population size" do
+    population = [
+      [0, 1, 2, 3],
+      [3, 2, 1, 0],
+    ]
+
+    distance_matrix = [
+      [0, 1, 2, 3],
+      [1, 0, 1, 2],
+      [2, 1, 0, 1],
+      [3, 2, 1, 0],
+    ]
+
+    next_generation = GaOperators.select_next_generation(population, distance_matrix)
+    assert length(next_generation) == length(population)
+  end
+
+  test "select_next_generation with odd population returns new even population minus one" do
+    population = [
+      [0, 1, 2, 3],
+      [3, 2, 1, 0],
+      [2, 3, 0, 1],
+    ]
+
+    distance_matrix = [
+      [0, 1, 2, 3],
+      [1, 0, 1, 2],
+      [2, 1, 0, 1],
+      [3, 2, 1, 0],
+    ]
+
+    next_generation = GaOperators.select_next_generation(population, distance_matrix)
+    assert length(next_generation) == length(population) - 1
+  end
 end

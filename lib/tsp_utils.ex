@@ -42,6 +42,7 @@ defmodule TspUtils do
       x = Enum.at(individual, index)
       y = Enum.at(individual, next_index)
       distance = get_distance(distance_matrix, x, y)
+
       distance
     end)
     |> Enum.sum

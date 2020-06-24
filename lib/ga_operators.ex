@@ -24,7 +24,7 @@ defmodule GaOperators do
   @spec tournament_selection([IndividualWithFitness.t], non_neg_integer) :: [integer]
   def tournament_selection(population, tournament_size) do
     Enum.take_random(population, tournament_size)
-    |> Enum.max_by(fn %{ fitness: fitness } -> fitness end)
+    |> Enum.min_by(fn %{ fitness: fitness } -> fitness end)
     |> (fn %{ individual: individual } -> individual end).()
   end
 
