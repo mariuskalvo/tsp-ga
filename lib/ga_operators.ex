@@ -51,8 +51,47 @@ defmodule GaOperators do
   @spec tournament_selection([IndividualWithFitness.t], non_neg_integer) :: [integer]
   def tournament_selection(population, tournament_size) do
     Enum.take_random(population, tournament_size)
-    |> Enum.min_by(fn %{ fitness: fitness } -> fitness end)
+    |> Enum.max_by(fn %{ fitness: fitness } -> fitness end)
     |> (fn %{ individual: individual } -> individual end).()
+  end
+
+  @spec roulette_selection([IndividualWithFitness.t]) :: [integer]
+  def roulette_selection(population) do
+
+    total_fitness = population
+    |> Enum.reduce(0, fn x, acc -> acc + x.fitness end)
+
+    pick_probability = :rand.uniform()
+
+    population
+    |> Enum.reduce_while(0, fn x, sum ->
+      cumulative_fitness = sum / total_fitness
+      case cumulative_fitness > pick_probability do
+        true  -> {:halt, x}
+        false -> {:cont, x.fitness + sum}
+      end
+    end)
+    |> IO.inspect
+    |> (fn %{individual: individual} -> individual end).()
+
+    # probabilities = population
+    # |> Enum.map(fn %{fitness: fitness} -> fitness / total_fitness end)
+
+    # probability_buckets = probabilities
+    # |> Enum.with_index
+    # |> Enum.map(fn {_prob, index} ->
+    #   probabilities
+    #   |> Enum.take(index + 1)
+    #   |> Enum.sum
+    # end)
+
+    # winner_index = probability_buckets
+    # |> Enum.find_index(fn acc_prob -> acc_prob > pick_probability end)
+
+    # population
+    # |> Enum.at(winner_index)
+    # |> (fn %{individual: individual} -> individual end).()
+
   end
 
   def crossover(parent1, parent2) when length(parent1) != length(parent2) do
@@ -76,7 +115,7 @@ defmodule GaOperators do
   def assign_fitness(population, distance_matrix) do
     for individual <- population do
       %IndividualWithFitness{
-        fitness: TspUtils.calculate_fitness(individual, distance_matrix),
+        fitness: (1 / TspUtils.calculate_distance(individual, distance_matrix)) * 1000,
         individual: individual
       }
     end
@@ -85,15 +124,14 @@ defmodule GaOperators do
   @spec select_next_generation([[integer]], [[integer]]) :: [[integer]]
   def select_next_generation(population, distance_matrix) do
 
-    tournament_size = 4
     mutation_probability = 0.05
     iterations = trunc(length(population) / 2)
     population_with_fitness = assign_fitness(population, distance_matrix)
 
     next_generation = 1..iterations
     |> Enum.reduce([], fn _i, acc ->
-      parent1 = tournament_selection(population_with_fitness, tournament_size)
-      parent2 = tournament_selection(population_with_fitness, tournament_size)
+      parent1 = roulette_selection(population_with_fitness)
+      parent2 = roulette_selection(population_with_fitness)
 
       {offspring1, offspring2} = crossover(parent1, parent2)
 

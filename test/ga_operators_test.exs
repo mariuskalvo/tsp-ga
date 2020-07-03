@@ -176,4 +176,17 @@ defmodule GaOperatorsTest do
 
     assert mutated == individual
   end
+
+  test "roulette_selection returns correct individual" do
+    population = [
+      %IndividualWithFitness{fitness: 1, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 2, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 3, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 4, individual: [1, 2, 3]},
+      %IndividualWithFitness{fitness: 5, individual: [1, 2, 3]},
+    ]
+
+    selected_individual = GaOperators.roulette_selection(population)
+    |> IO.inspect
+  end
 end

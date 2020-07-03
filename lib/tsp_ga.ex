@@ -20,8 +20,8 @@ defmodule TspGa do
     body = File.read!(file_path)
     distance_matrix = Utils.create_distance_matrix(body)
 
-    generations = 1000
-    population_size = 750
+    generations = 10000
+    population_size = 100
 
     initial_population = initialize_population(distance_matrix, population_size)
 
@@ -31,10 +31,12 @@ defmodule TspGa do
 
 
       if (rem(gen_count, 10) == 0) do
-        %{fitness: next_gen_fitness } = next_generation
+        %{individual: next_gen_ind, fitness: next_gen_fitness } = next_generation
         |> GaOperators.assign_fitness(distance_matrix)
-        |> Enum.min_by(fn %{fitness: fitness} -> fitness end)
-        IO.write("Generation: #{gen_count}\tFitness:#{next_gen_fitness}\n")
+        |> Enum.max_by(fn %{fitness: fitness} -> fitness end)
+
+        distance = Utils.calculate_distance(next_gen_ind, distance_matrix)
+        IO.write("Generation: #{gen_count}\tFitness:#{next_gen_fitness}\tDistance: #{distance}\n")
       end
 
       next_generation
@@ -42,7 +44,7 @@ defmodule TspGa do
   end
 end
 
-# input_file = "dantzig42_d.tsp"
-# file_path = "#{__ENV__.file |> Path.dirname}/data/#{input_file}"
-# IO.write "Running.."
-# TspGa.run(file_path)
+input_file = "dantzig42_d.tsp"
+file_path = "#{__ENV__.file |> Path.dirname}/data/#{input_file}"
+IO.write "Running.."
+TspGa.run(file_path)
