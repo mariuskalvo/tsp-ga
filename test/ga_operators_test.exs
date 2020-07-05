@@ -187,6 +187,5 @@ defmodule GaOperatorsTest do
     ]
 
     selected_individual = GaOperators.roulette_selection(population)
-    |> IO.inspect
   end
 end
