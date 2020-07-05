@@ -1,7 +1,7 @@
 defmodule Runner do
-
-  @spec run_ga(binary) :: :ok
-  def run_ga(file_path) when is_bitstring(file_path) do
+  use Application
+  @spec init(binary) :: :ok
+  def init(file_path) when is_bitstring(file_path) do
 
     distance_matrix = FileLoader.get_distance_matrix(file_path)
     generations = 10000
@@ -22,11 +22,9 @@ defmodule Runner do
     :ok
   end
 
-  @spec main(any) :: :ok
-  def main(_args \\ []) do
+  def start(_type, _args) do
     input_file = "dantzig42_d.tsp"
     file_path = "#{__ENV__.file |> Path.dirname}/data/#{input_file}"
-    IO.write "Running.."
-    run_ga(file_path)
+    GenServer.start_link(Runner, file_path)
   end
 end
