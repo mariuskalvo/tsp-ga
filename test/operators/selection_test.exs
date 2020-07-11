@@ -1,7 +1,6 @@
 
 defmodule SelectionTest do
   use ExUnit.Case
-  import Selection
   doctest Selection
 
   test "tournament_selection returns a random individual from the population" do

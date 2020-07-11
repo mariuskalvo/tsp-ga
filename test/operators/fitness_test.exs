@@ -1,7 +1,6 @@
 
 defmodule FitnessTest do
   use ExUnit.Case
-  import Fitness
   doctest Fitness
 
   test "calculate_distance calculates correct distance" do

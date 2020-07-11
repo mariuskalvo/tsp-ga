@@ -1,6 +1,5 @@
 defmodule DistanceMatrixTest do
   use ExUnit.Case
-  import DistanceMatrix
   doctest DistanceMatrix
 
   setup do

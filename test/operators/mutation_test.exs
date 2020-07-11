@@ -1,7 +1,6 @@
 
 defmodule MutationTest do
   use ExUnit.Case
-  import Mutation
   import Mock
   doctest Mutation
 

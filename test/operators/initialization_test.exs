@@ -1,6 +1,5 @@
 defmodule InitializationTest do
   use ExUnit.Case
-  import Initialization
   doctest Initialization
 
   test "initialize_population generates population of correct size" do

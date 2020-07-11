@@ -1,6 +1,5 @@
 defmodule CrossoverTest do
   use ExUnit.Case
-  import Crossover
   doctest Crossover
 
   test "single_ordered_crossover generates individuals of same length as parents" do

@@ -9,6 +9,13 @@ defmodule TspGa.MixProject do
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      aliases: aliases()
+    ]
+  end
+
+  defp aliases do
+    [
+      test: "test --no-start" #(2)
     ]
   end
 
