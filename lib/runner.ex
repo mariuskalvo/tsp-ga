@@ -25,9 +25,10 @@ defmodule Runner do
 
   @spec init(bitstring()) :: :ok
   def init(file_path) when is_bitstring(file_path) do
+    RunStatusAgent.set_run_status(:running)
 
     distance_matrix = FileLoader.get_distance_matrix(file_path)
-    generations = 10000
+    generations = 100
     population_size = 150
     tournament_size = 5
 
@@ -37,6 +38,8 @@ defmodule Runner do
     |> Enum.reduce(initial_population, fn gen_count, previous_gen ->
       process_generation(previous_gen, distance_matrix, tournament_size, gen_count)
     end)
+
+    RunStatusAgent.set_run_status(:done)
     :ok
   end
 
@@ -44,6 +47,7 @@ defmodule Runner do
     :timer.sleep(:timer.seconds(1))
 
     elite_pool = SharedElitePool.get_elite_pool()
+
     if Enum.any?(elite_pool) do
       elite = SharedElitePool.get_elite_pool()
       |> Fitness.assign_fitness(distance_matrix)
@@ -54,7 +58,15 @@ defmodule Runner do
       IO.write("#{distance}\n")
     end
 
-    run_loop(distance_matrix)
+    run_statuses = RunStatusAgent.get_run_statuses()
+    done = run_statuses
+    |> Map.values()
+    |> Enum.all?(fn x -> x == :done end)
+
+    case done do
+      true -> IO.write("All agents ran to completion\n")
+      false -> run_loop(distance_matrix)
+    end
   end
 
   def start(_type, _args) do
@@ -63,11 +75,13 @@ defmodule Runner do
 
     distance_matrix = FileLoader.get_distance_matrix(file_path)
     SharedElitePool.start_link()
+    RunStatusAgent.start_link()
 
     number_of_processes = 4
     1..number_of_processes
     |> Enum.map(fn _p -> spawn(fn -> init(file_path) end) end)
 
     run_loop(distance_matrix)
+    {:ok, self()}
     end
 end

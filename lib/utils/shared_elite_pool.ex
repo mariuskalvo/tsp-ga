@@ -10,7 +10,7 @@ defmodule SharedElitePool do
 
   @spec get_elite_pool :: [[integer]]
   def get_elite_pool() do
-    Agent.get(@agent_name, fn state -> state end)
+    Agent.get(@agent_name, &(&1))
     |> Map.values
   end
 
