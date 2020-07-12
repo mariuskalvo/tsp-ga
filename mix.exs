@@ -3,7 +3,6 @@ defmodule TspGa.MixProject do
 
   def project do
     [
-
       app: :tsp_ga,
       version: "0.1.0",
       elixir: "~> 1.10",
@@ -15,7 +14,7 @@ defmodule TspGa.MixProject do
 
   defp aliases do
     [
-      test: "test --no-start" #(2)
+      test: "test --no-start"
     ]
   end
 
